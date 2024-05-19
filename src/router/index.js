@@ -1,16 +1,25 @@
 import Dashboard from "../pages/Dashboard";
 import Trade from "../pages/Trade/Trade";
+import Watchlist from "../pages/Watchlist/Watchlist";
 
 
-export const adminRouter = [
+export const dashboardRouter = [
     {
-        path: '/',
+        path: 'dashboard',
         element: <Dashboard />
     },
     {
-        path: '/trade',
+        path: '/dashboard/trade',
         element: <Trade />
     },
+    {
+        path: '/dashboard/watchlist',
+        element: <Watchlist />
+    },
+    // {
+    //     path: '*',
+    //     element: <ErrorPage />
+    // }
     // {
     //     path: '/change-password',
     //     element: <ChangePasswordPage />

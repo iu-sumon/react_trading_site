@@ -2,6 +2,8 @@
 
 export default function Dashboard() {
     return (
-        <h1>Hello Dashboard</h1>
+        <div>
+            <h1 className="text-center" style={{ 'color': 'red' }} >Hello Dashboard</h1>
+        </div >
     );
 }
