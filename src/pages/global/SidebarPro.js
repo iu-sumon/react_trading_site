@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ProSidebar, Menu, MenuItem} from 'react-pro-sidebar';
+import { ProSidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -74,7 +74,7 @@ const SidebarPro = () => {
                 </button>
               </div>
             )}
-          </MenuItem> 
+          </MenuItem>
 
           <div style={{ paddingLeft: isCollapsed ? undefined : "10%" }}>
             <Item
@@ -87,15 +87,15 @@ const SidebarPro = () => {
 
             {/* <span style={{ fontSize: "1rem", color: "#aaaaaa", margin: "15px 0 5px 20px" }}>Data</span> */}
             <Item
-              title="Manage Team"
-              to="/team"
+              title="Trade"
+              to="/trade"
               icon={faUsers}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="Contacts Information"
-              to="/contacts"
+              title="Watchlist"
+              to="/watchlist  "
               icon={faAddressBook}
               selected={selected}
               setSelected={setSelected}

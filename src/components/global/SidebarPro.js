@@ -88,14 +88,14 @@ const SidebarPro = () => {
             {/* <span style={{ fontSize: "1rem", color: "#aaaaaa", margin: "15px 0 5px 20px" }}>Data</span> */}
             <Item
               title="Watchlist"
-              to="/dashboard/watchlist"
+              to="/watchlist"
               icon={faUsers}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Trade"
-              to="/dashboard/trade"
+              to="/trade"
               icon={faAddressBook}
               selected={selected}
               setSelected={setSelected}

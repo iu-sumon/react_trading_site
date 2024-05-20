@@ -5,15 +5,19 @@ import Watchlist from "../pages/Watchlist/Watchlist";
 
 export const dashboardRouter = [
     {
-        path: 'dashboard',
+        path: '/',
         element: <Dashboard />
     },
     {
-        path: '/dashboard/trade',
+        path: '/dashboard',
+        element: <Dashboard />
+    },
+    {
+        path: '/trade',
         element: <Trade />
     },
     {
-        path: '/dashboard/watchlist',
+        path: '/watchlist',
         element: <Watchlist />
     },
     // {

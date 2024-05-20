@@ -1,25 +1,28 @@
-import { useState } from 'react';
-import { Route, Routes } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
-// import Sidebar from './pages/global/SidebarPro';
-// import Topbar from './pages/global/Topbar';
-// import Watchlist from './pages/Watchlist/Watchlist';
-import PublicLayout from './layout/PublicLayout';
 import MainLayout from './layout/MainLayout';
-// import Login from './pages/login/Login';
+import { dashboardRouter } from './router';
+import Login from './pages/login/Login';
+import Dashboard from './pages/Dashboard';
+
 
 function App() {
-
-
   return (
-    <>
+    <BrowserRouter>
       <Routes>
-        <Route path="/*" element={<PublicLayout />}>
+        {/* Public routes (no layout) */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Authenticated routes with AuthLayout */}
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Dashboard />} />
+          {dashboardRouter.map((route, key) => {
+            return <Route path={route.path} key={key} element={route.element} />
+          })}
         </Route>
-        <Route path="dashboard/*" element={<MainLayout />}>
-        </Route>
+        {/* <Route path="*" element={<Home />} /> */}
       </Routes>
-    </>
+    </BrowserRouter>
   );
 
 
