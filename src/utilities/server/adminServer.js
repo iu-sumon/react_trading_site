@@ -7,7 +7,10 @@ const adminServer = axios.create({
 });
 
 export const setAuthToken = (token) => {
-	adminServer.defaults.headers.common["Authorization"] = "Bearer " + token;
+	if (token) {
+		adminServer.defaults.headers.common["Authorization"] = "Bearer " + token;
+	}
+
 };
 
 // export const setLanguage = (lang) => {

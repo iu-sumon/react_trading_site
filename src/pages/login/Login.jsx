@@ -51,7 +51,10 @@ const Login = () => {
             setCookiesFromAuthResponse(res);
             dispatch(login, res);
             navigate('/dashboard');
-        }).catch((err) => { errorHandler(err) }).finally(() => {
+        }).catch((err) => {
+            console.log(err.response);
+            errorHandler(err);
+        }).finally(() => {
             setLoading(false);
         });
     };
