@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import logo from '../../assets/broker-logo-light.png'
 import './Login.css'
@@ -7,11 +7,22 @@ import adminServer, { setCookiesFromAuthResponse } from "../../utilities/server/
 import errorHandler from "../../utilities/errorHandler";
 import { API_LOGIN } from "../../utilities/apiRequest/auth";
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../../slices/userSlice';
 
 
 
 const Login = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user);
+
+    useEffect(() => {
+        if (user.isLoggedIn) {
+            navigate('/dashboard');
+        }
+    }, [user]);
+
     const [credentials, setCredential] = useState({
         username: '',
         password: ''
@@ -35,9 +46,10 @@ const Login = () => {
         formdata.append("password", credentials.password);
         formdata.append("user_device", "Desktop");
 
-        axios.post("https://omsapi.quantbd.com/auth/login", formdata).then((res) => {
-            // setCookiesFromAuthResponse(res);
+        adminServer.post("https://omsapi.quantbd.com/auth/login/", formdata).then((res) => {
             setLoading(false);
+            setCookiesFromAuthResponse(res);
+            dispatch(login, res);
             navigate('/dashboard');
         }).catch((err) => { errorHandler(err) }).finally(() => {
             setLoading(false);

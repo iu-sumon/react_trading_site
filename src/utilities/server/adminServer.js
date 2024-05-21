@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import Cookies from "js-cookie";
+
 const adminServer = axios.create({
 	baseURL: process.env.REACT_APP_SERVER_URL || 'https://omsapi.quantbd.com/',
 });
@@ -22,7 +23,7 @@ export const clearCookies = () => {
 
 export const setCookiesFromAuthResponse = (res) => {
 
-	Cookies.set("_jwtToken", res.data.data.access_token);
+	Cookies.set("_jwtToken", res.access_token);
 
 	setAuthToken(Cookies.get("_jwtToken"));
 	// setLanguage(Cookies.get("_jwtLang"));

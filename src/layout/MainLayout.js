@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/global/SidebarPro';
 import Topbar from '../components/global/Topbar';
-import { dashboardRouter } from '../router';
-import Watchlist from '../pages/Watchlist/Watchlist';
-import Dashboard from '../pages/Dashboard';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-const MainLayout = ({ children }) => {
+const MainLayout = () => {
+    const navigate = useNavigate();
+    const user = useSelector((state) => state.user);
     const [isSidebar, setIsSidebar] = useState(true);
 
     useEffect(() => {
-        console.log(children);
-        /* const token = Cookies.get("_jwtToken");
-         if (token) {
-             window.location = "/login";
-         }*/
-    }, [children])
+        if (!user.isLoggedIn) {
+            navigate('/login');
+        }
+    }, [user]);
 
     return (
         <div className="app">
