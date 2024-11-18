@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 // userSlice.js
 const initialState = {
-    isLoggedIn: localStorage.getItem('isLoggedIn') === true,
+    isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
     userData: JSON.parse(localStorage.getItem('userData')),
 };
 
@@ -13,7 +13,7 @@ const userSlice = createSlice({
         login(state, action) {
             state.isLoggedIn = true;
             state.userData = action.payload;
-            localStorage.setItem('isLoggedIn', true);
+            localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('userData', JSON.stringify(action.payload));
         },
         logout(state) {

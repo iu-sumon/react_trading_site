@@ -30,6 +30,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy": "https://omsapi.quantbd.com",
   "eslintConfig": {
     "extends": [
       "react-app",

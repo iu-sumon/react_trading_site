@@ -1,6 +1,20 @@
+import axios from "axios";
+import { useEffect } from "react";
+import adminServer from "../../utilities/server/adminServer";
+import { GET_WATCHLIST } from "../../utilities/apiRequest/watchlist";
 
 
 export default function Dashboard() {
+    useEffect(() => {
+        // getMyWatchlist();
+    }, [])
+
+    // function getMyWatchlist() {
+    //     adminServer.get(GET_WATCHLIST).then(response => {
+    //         console.log(response);
+    //     })
+    // }
+
     return (
         <div className="container">
             <h2 className="title">Dashboard</h2>

@@ -19,6 +19,7 @@ const Login = () => {
 
     useEffect(() => {
         if (user.isLoggedIn) {
+            console.log('hello');
             navigate('/dashboard');
         }
     }, [user]);
@@ -32,7 +33,7 @@ const Login = () => {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setCredential({ ...credentials, [name]: value }); // Spread operator for state update
+        setCredential({ ...credentials, [name]: value });
     };
 
 
@@ -41,22 +42,30 @@ const Login = () => {
         e.preventDefault();
         setLoading(true);
 
-        const formdata = new FormData();
+        const formdata = new URLSearchParams();
         formdata.append("username", credentials.username);
         formdata.append("password", credentials.password);
         formdata.append("user_device", "Desktop");
 
-        adminServer.post("https://omsapi.quantbd.com/auth/login/", formdata).then((res) => {
+        // setCookiesFromAuthResponse(fakeResponse);
+        // dispatch(login(fakeResponse));
+        adminServer.post(API_LOGIN, formdata, {
+            headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }).then((res) => {
             setLoading(false);
-            setCookiesFromAuthResponse(res);
-            dispatch(login, res);
+            setCookiesFromAuthResponse(res.data);
+            dispatch(login(res.data));
             navigate('/dashboard');
         }).catch((err) => {
-            console.log(err.response);
             errorHandler(err);
         }).finally(() => {
             setLoading(false);
         });
+
+
     };
 
     return (

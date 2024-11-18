@@ -154,8 +154,8 @@ const SidebarPro = () => {
               setSelected={setSelected}
             />
             <Item
-              title="Geography Chart"
-              to="/geography"
+              title="Logout"
+              to="/logout"
               icon={faMap}
               selected={selected}
               setSelected={setSelected}
