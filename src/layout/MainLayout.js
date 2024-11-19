@@ -13,6 +13,11 @@ const MainLayout = () => {
         if (!user.isLoggedIn) {
             navigate('/login');
         }
+        // const worker = new Worker(new URL('../workers/ws_worker_fix.js', import.meta.url));
+
+        // worker.onmessage = (event) => {
+        //     console.log('Message from worker:', event.data);
+        // };
     }, [user]);
 
     return (
