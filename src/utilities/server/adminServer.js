@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 
 const adminServer = axios.create({
 	baseURL: process.env.REACT_APP_SERVER_URL || 'https://omsapi.quantbd.com/',
+	accept: 'application/json',
 });
 
 export const setAuthToken = (token) => {
