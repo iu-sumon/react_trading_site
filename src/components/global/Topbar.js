@@ -1,4 +1,5 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext , useEffect } from 'react';
+import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import GoldenLayoutComponent from '../../components/GoldenLayoutComponent';
 import {
@@ -14,6 +15,10 @@ import { ColorModeContext } from '../../theme';
 
 const Topbar = () => {
   const colorMode = useContext(ColorModeContext);
+  const indexes = useSelector((state) => state.indexes.indexes);
+  const cse_indexes = useSelector((state) => state.indexes.cse_indexes);
+  const [currentIndex, setCurrentIndex] = useState('DSEX'); // Default index
+  const [currentCseIndex, setCurrentCseIndex] = useState('CSCX'); // Default index
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [config, setConfig] = useState({
@@ -22,6 +27,10 @@ const Topbar = () => {
       content: []
     }]
   });
+
+  // useEffect(() => {
+
+  // }, []);
 
   const addPage = (page) => {
     const newConfig = { ...config };
@@ -51,6 +60,104 @@ const Topbar = () => {
           <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
+
+      {/* index select option  */}
+      <div style={{ 'display': 'flex', 'alignItems': 'center' }}>
+        <div>
+      <select
+        className='form-control'
+        value={currentIndex}
+        onChange={(e) => setCurrentIndex(e.target.value)}
+        style={{ marginLeft: '10px', padding: '5px' }}
+      >
+        {Object.keys(indexes).map((index) => (
+          <option key={index} value={index}>
+            {index}
+          </option>
+        ))}
+      </select>
+        </div>
+
+
+    <div id="globalidx_dse" className="globalidx_container" style={{ marginLeft: '10px', padding: '5px' }}>
+          <span 
+
+            style={{ cursor: 'pointer' }}
+          >
+            <i className="fa fa-info turnover_info_btn" aria-hidden="true"></i>
+          </span>
+          
+          <span 
+            style={{
+              background: 'rgb(139, 11, 8)',
+              borderRadius: '5px',
+              color: 'white',
+              padding : '5px 10px',
+            }} 
+            className={indexes[currentIndex] && indexes[currentIndex].index_change > 0 ?  'bg-success' : 'bg-danger'  }
+          >
+            {indexes[currentIndex] ? parseFloat(indexes[currentIndex].index_value).toFixed(2) : 'N/A'}
+          </span>
+          
+          <br />
+          
+          <span className="globalidx-lower-section">
+            <span className={indexes[currentIndex] && indexes[currentIndex].index_change > 0 ?  'text-success' : 'text-danger'  }>{indexes[currentIndex] ? parseFloat(indexes[currentIndex].index_change).toFixed(2) : 'N/A'}</span>
+             &nbsp;
+            <span className={indexes[currentIndex] && indexes[currentIndex].index_change > 0 ?  'text-success' : 'text-danger'  }>({indexes[currentIndex] ? parseFloat(indexes[currentIndex].index_changeper).toFixed(2) : 'N/A'})</span>
+          </span>
+        </div>
+      </div>
+
+      
+      <div style={{ 'display': 'flex', 'alignItems': 'center' }}>
+        <div>
+      <select
+        className='form-control'
+        value={currentCseIndex}
+        onChange={(e) => setCurrentCseIndex(e.target.value)}
+        style={{ marginLeft: '10px', padding: '5px' }}
+      >
+        {Object.keys(cse_indexes).map((index) => (
+          <option key={index} value={index}>
+            {index}
+          </option>
+        ))}
+      </select>
+        </div>
+
+
+    <div id="globalidx_dse" className="globalidx_container" style={{ marginLeft: '10px', padding: '5px' }}>
+          <span 
+
+            style={{ cursor: 'pointer' }}
+          >
+            <i className="fa fa-info turnover_info_btn" aria-hidden="true"></i>
+          </span>
+          
+          <span 
+            style={{
+              background: 'rgb(139, 11, 8)',
+              borderRadius: '5px',
+              color: 'white',
+              padding : '5px 10px',
+            }} 
+            className={cse_indexes[currentCseIndex] && cse_indexes[currentCseIndex].index_change > 0 ?  'bg-success' : 'bg-danger'  }
+          >
+            {cse_indexes[currentCseIndex] ? parseFloat(cse_indexes[currentCseIndex].index_value).toFixed(2) : 'N/A'}
+          </span>
+          
+          <br />
+          
+          <span className="globalidx-lower-section">
+            <span className={cse_indexes[currentCseIndex] && cse_indexes[currentCseIndex].index_change > 0 ?  'text-success' : 'text-danger'  }>{cse_indexes[currentCseIndex] ? parseFloat(cse_indexes[currentCseIndex].index_change).toFixed(2) : 'N/A'}</span>
+             &nbsp;
+            <span className={cse_indexes[currentCseIndex] && cse_indexes[currentCseIndex].index_change > 0 ?  'text-success' : 'text-danger'  }>({cse_indexes[currentCseIndex] ? parseFloat(cse_indexes[currentCseIndex].index_changeper).toFixed(2) : 'N/A'})</span>
+          </span>
+        </div>
+      </div>
+
+    {/* index select option  */}
 
       {/* ICONS */}
       <div style={styles.icons}>

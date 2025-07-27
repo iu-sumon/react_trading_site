@@ -1,10 +1,20 @@
 import axios from "axios";
 // import { notification } from 'antd';
+import Logout from "../pages/logout/Logout";
+   
 
 const errorHandler = (error) => {
-  console.log("error", error)
-  alert('server error occured')
+
   if (error.response && error.response.data) {
+    if (error.response.data.status === 401) {
+      // notification.error({
+      //   message: 'Error',
+      //   description: 'Unauthorized access. Please log in again.'
+      // });
+      // Redirect to logout page
+      window.location.href = '/logout';
+      return <Logout />;
+    }
     if (error.response.data.errors) {
       const errorMsg = error.response.data.errors;
       errorMsg.forEach((ele) => {

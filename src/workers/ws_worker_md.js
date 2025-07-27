@@ -1,8 +1,31 @@
 
-window.importScripts('/js/socket.io.min.js'); // This should work if the file is in the public/js directory/ Relative to the public folder
+// importScripts('/static/js/feeds/ws_config.js');
+// importScripts('socket.io.min.js');
+// importScripts('/static/js/crypto.min.js');
+import MD5 from 'crypto-js/md5';
+import { io } from 'socket.io-client';
+
+const generateToken = () => {
+    const offset = 6; // UTC+6
+    const date = new Date();
+    const utcDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000));
+    const localDate = new Date(utcDate.getTime() + (offset * 3600000));
+    const formattedDate = localDate.toISOString().split('T')[0]; // YYYY-MM-DD 
+    const tokenString = 'QUANT+' + formattedDate;
+    return MD5(tokenString).toString();
+};
+
+
+const token = generateToken();
+
+const node_socket_md_host = 'https://ws-md.quantbd.com'; // Replace with your actual host
 
 var channel_and_fields = {
     bbo: {
+        fields: ["bbo"],
+        active: true
+    },
+    cse_bbo: {
         fields: ["bbo"],
         active: true
     },
@@ -18,6 +41,10 @@ var channel_and_fields = {
         fields: ["ltp"],
         active: true
     },
+    cse_ltp: {
+        fields: ["ltp"],
+        active: true
+    },
     news: {
         fields: ["nd", "nr", "nt", "ntx", "ntp"],
         active: true
@@ -26,7 +53,15 @@ var channel_and_fields = {
         fields: ["index"],
         active: true
     },
+    cse_index: {
+        fields: ["index"],
+        active: true
+    },
     mktevent: {
+        fields: ["s", "g", "e", "et", "st"],
+        active: true
+    },
+    cse_mktevent: {
         fields: ["s", "g", "e", "et", "st"],
         active: true
     },
@@ -42,20 +77,63 @@ var channel_and_fields = {
         fields: ["mkt_status"],
         active: true
     },
+    mkt_status_cse: {
+        fields: ["mkt_status"],
+        active: true
+    },
     adv_dcl: {
         fields: ["adv_dcl"],
+        active: true
+    },
+    cse_adv_dcl: {
+        fields: ["adv_dcl"],
+        active: true
+    },
+    index_chart: {
+        fields: ["index"],
         active: true
     }
 };
 
 var subscribed_channel = [];
-var node_socket_md_host = "https://ws-md.quantbd.com/";
-var socket = io(node_socket_md_host);
+
+const socket = io(node_socket_md_host, {
+
+    autoConnect: false,
+
+    auth: {
+        token: token
+    }
+});
+
+
+// connectToSocket();
+
+function connectToSocket() {
+    if (socket.connected) {
+        console.log('Socket is already connected');
+        return;
+    }
+    // console.log('Connecting to socket...');
+
+    socket.connect();
+}
+
 socket.on('connect', () => {
+    // feed_throttle({'channel' : 'ws_status' , 'msg' : 'connected'},0);
     console.log('Connected to MD server ' + node_socket_md_host);
+
     subscribed_channel = []
     listen_active_channels();
 });
+
+
+socket.on('disconnect', () => {
+    // feed_throttle({'channel' : 'ws_status' , 'msg' : 'disconnected'},0);
+    console.log('Disconnected from MD server ' + node_socket_md_host);
+});
+
+
 
 
 
@@ -89,14 +167,12 @@ function activeInactiveChannel(channels, status) {
 
 
 function listen_active_channels() {
-    for (const channel in channel_and_fields) {
+    for (let channel in channel_and_fields) {
         let target_channel = channel_and_fields[channel];
         if (target_channel.active) {
             if (!subscribed_channel.includes(channel)) {
                 socket.emit("subscribe", channel);
-                // socket.on(channel, (msg) => {
-                //     sendDataToMainTread(msg.channel,msg.msg);
-                // });
+                // console.log('Subscribed to channel:', channel);
             }
             subscribed_channel.push(channel);
         }
@@ -104,13 +180,12 @@ function listen_active_channels() {
 }
 
 socket.onAny((channel, msg) => {
-    // console.log('Arguments:', msg);
     sendDataToMainTread(channel, msg);
 });
 
 
 function unsubscribeToAllInactiveChannel() {
-    for (const channel in channel_and_fields) {
+    for (let channel in channel_and_fields) {
         let target_channel = channel_and_fields[channel];
         if (!target_channel.active) {
             if (subscribed_channel.includes(channel)) {
@@ -134,17 +209,18 @@ function unsubscribeToAllInactiveChannel() {
 
 onmessage = (msg) => {
     var msg_type = msg.data[0];
-    if (msg_type == 'connect') {
-        // subscribeToAllActiveChannel();
-        socket.connect();
-        console.log('WS FIX Channels Subscribed');
-    }
+    // if (msg_type == 'connect') {
+    //     // subscribeToAllActiveChannel();
+    //     socket.connect();
+    //     console.log('WS FIX Channels Subscribed');
+    // }
 
-    if (msg_type == 'disconnect') {
-        // subscribeToAllActiveChannel();
-        socket.disconnect();
-        console.log('WS md disconnected');
-    }
+    // if (msg_type == 'disconnect') {
+    //     // subscribeToAllActiveChannel();
+
+    //     socket.disconnect();
+    //     console.log('WS md disconnected');
+    // }
     // if (msg_type == 'terminate') {
     //     unsubscribeAllChannels();
     //     console.log('WS FIX Channels Unsubscribed');
@@ -163,25 +239,30 @@ onmessage = (msg) => {
     //     activeInactiveChannel(data_channels, data_status);
     // }
 
-    if (msg_type == 'subscribe_to_mkt_depth_channel') {
+    if (msg_type === 'init') {
+        console.log('Worker initialized');
+        connectToSocket();
+    }
+
+    if (msg_type === 'subscribe_to_mkt_depth_channel') {
         let market_depth_channel = msg.data[1]
         subscribeMarketDepthChannels(market_depth_channel);
     }
-    if (msg_type == 'subscribe_unsubscribe_ticker_channel') {
+    if (msg_type === 'subscribe_unsubscribe_ticker_channel') {
         let sub = msg.data[1]
         let ch = msg.data[2]
         subUnsubTickerChannel(sub, ch);
     }
-    if (msg_type == 'subscribe_time_sales_symbol_channel') {
+    if (msg_type === 'subscribe_time_sales_symbol_channel') {
         let ch = msg.data[1]
         subscribeTimeSalesCh(ch);
     }
 
-    if (msg_type == 'unsubscribe_time_sales_symbol_channel') {
+    if (msg_type === 'unsubscribe_time_sales_symbol_channel') {
         unsubscribeTimeSalesCh();
     }
 
-    if (msg_type == 'sub_unsub_channel') {
+    if (msg_type === 'sub_unsub_channel') {
         let channel = msg.data[1]
         let flag = msg.data[2]
 
@@ -327,20 +408,24 @@ function subcribeUnsubscribeCustomChannel(channel, flag) {
 
 function sendDataToMainTread(channel, msg) {
 
-    if (channel === 'ltp') {
+    if (channel == 'ltp' || channel == 'cse_ltp') {
         parserObject(msg, 'ltp', handle_ltp_data);
         return;
     }
-    if (channel === 'bbo') {
+    if (channel == 'bbo' || channel == 'cse_bbo') {
         parserObject(msg, 'bbo', handle_bbo_data);
         return;
     }
-    if (channel === 'index') {
+    if (channel == 'index' || channel == 'cse_index') {
         parserObject(msg, 'index', handle_index_data);
         return;
     }
-    let data_channel = '';
-    if (channel.includes('dse_md_mktdepth_')) {
+    if (channel == 'index_chart') {
+        parserObject(msg, 'index', handle_index_chart_data);
+        return;
+    }
+    let data_channel = channel;
+    if (channel.includes('md_mktdepth_')) {
         data_channel = "dse_md_mktdepth_custom"
         // console.log(msg)
     }
@@ -352,7 +437,7 @@ function sendDataToMainTread(channel, msg) {
         data_channel = channel
     }
 
-    let json_data = {
+    const json_data = {
         "channel": data_channel,
         "msg": { "value": msg }
     };
@@ -385,6 +470,7 @@ function handle_ltp_data(msg) {
     let market_health = {
         "channel": 'market_health',
         "msg": {
+            exchange: msg.xc,
             market_turnover: msg.mtvr,
             market_buy_percent: parseFloat(msg.by),
             market_sell_percent: parseFloat(msg.sl),
@@ -393,30 +479,31 @@ function handle_ltp_data(msg) {
         }
     };
 
-    let ticker = {
-        "channel": 'time_and_sales_ticker',
-        "msg": {
-            ltp: msg.p,
-            symbol: msg.s,
-            board: msg.g,
-            exchange: msg.xc,
-            qty: msg.eq,
-            time: msg.t,
-            change: msg.ch,
-            change_per: msg.chp,
-            side: msg.sd,
-        }
-    };
+    // let ticker = {
+    //     "channel": 'time_and_sales_ticker',
+    //     "msg": {
+    //         ltp: msg.p,
+    //         symbol: msg.s,
+    //         board: msg.g,
+    //         exchange: msg.xc,
+    //         qty: msg.eq,
+    //         time: msg.t,
+    //         change: msg.ch,
+    //         change_per: msg.chp,
+    //         side: msg.sd,
+    //     }
+    // };
 
 
 
     feed_throttle(ltp, 0);
     feed_throttle(market_health, 0);
-    feed_throttle(ticker, 0);
+    // feed_throttle(ticker, 0);
 
-    if (msg.xc == 'DSE') {
-        feed_throttle(chart, 0);
-    }
+    // if(msg.xc == 'DSE')
+    // {
+    feed_throttle(chart, 0);
+    // }
 
 
     if (['PUBLIC', 'SPUBLIC'].includes(msg.g)) {
@@ -436,6 +523,10 @@ function handle_index_data(msg) {
     feed_throttle({ 'channel': 'index', 'msg': msg }, 0);
 }
 
+function handle_index_chart_data(msg) {
+    feed_throttle({ 'channel': 'index_chart', 'msg': msg }, 0);
+}
+
 
 
 function parserObject(msg, propertyName, parseFunction) {
@@ -451,4 +542,4 @@ function parserObject(msg, propertyName, parseFunction) {
 
 
 
-listen_active_channels();
+// listen_active_channels();
