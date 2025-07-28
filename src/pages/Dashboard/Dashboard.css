@@ -1,0 +1,101 @@
+/* Import Bootstrap if you aren't already */
+/* @import '~bootstrap/dist/css/bootstrap.min.css'; */
+
+.market-watch-header-container,
+.market-watch-list {
+    border: 1px solid #dee2e6; /* Bootstrap table border color */
+    border-collapse: collapse; /* For border-spacing effect */
+}
+
+.market-watch-header-row,
+.market-watch-row {
+    display: flex; /* Makes the row a flex container */
+    width: 100%;
+    /* Add borders if needed, or rely on cell borders */
+    border-bottom: 1px solid #dee2e6; /* Simulate table row border */
+}
+
+.market-watch-header-cell,
+.market-watch-cell {
+    flex: 1; /* Distribute space equally initially */
+    padding: .75rem; /* Standard Bootstrap padding */
+    text-align: left; /* Default alignment */
+    border-right: 1px solid #dee2e6; /* Cell borders */
+    white-space: nowrap; /* Prevent text wrapping if columns are narrow */
+    overflow: hidden; /* Hide overflow if text is too long */
+    text-overflow: ellipsis; 
+}
+
+/* Adjust column widths as needed for your specific data */
+/* You'll need to fine-tune these percentages or fixed widths */
+.market-watch-header-cell:nth-child(1), .market-watch-cell:nth-child(1) { flex: 0 0 10%; } /* Symbol */
+.market-watch-header-cell:nth-child(2), .market-watch-cell:nth-child(2) { flex: 0 0 15%; } /* Name */
+.market-watch-header-cell:nth-child(3), .market-watch-cell:nth-child(3) { flex: 0 0 8%; }  /* Price */
+.market-watch-header-cell:nth-child(4), .market-watch-cell:nth-child(4) { flex: 0 0 8%; }  /* Change */
+.market-watch-header-cell:nth-child(5), .market-watch-cell:nth-child(5) { flex: 0 0 8%; }  /* Change % */
+/* ... continue for all 13 columns, ensuring they add up to 100% or are fixed-width */
+
+/* Last cell border fix */
+.market-watch-header-cell:last-child, .market-watch-cell:last-child {
+    border-right: none;
+}
+
+/* Header specific styling */
+.market-watch-header-row {
+    font-weight: bold;
+    background-color: #f8f9fa; /* Light gray for header */
+}
+
+/* Stripe effect (optional) */
+.market-watch-row:nth-child(even) {
+    background-color: #f2f2f2; /* Lighter background for even rows */
+}
+
+/* Apply Bootstrap styles for success/danger backgrounds */
+.market-watch-cell.bg-success { background-color: var(--bs-table-bg-state-success, var(--bs-table-bg-state, #d1e7dd)); } /* Or your specific Bootstrap success color */
+.market-watch-cell.bg-danger { background-color: var(--bs-table-bg-state-danger, var(--bs-table-bg-state, #f8d7da)); }  /* Or your specific Bootstrap danger color */
+
+/* Text colors for change */
+.text-success { color: #198754; } /* Bootstrap success color */
+.text-danger { color: #dc3545; } /* Bootstrap danger color */
+
+/* Time and Sales specific styling (similar pattern) */
+.time-sales-header-container,
+.time-sales-list {
+    border: 1px solid #dee2e6;
+    border-collapse: collapse;
+}
+
+.time-sales-header-row,
+.time-sales-row {
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.time-sales-header-cell,
+.time-sales-cell {
+    flex: 1;
+    padding: .5rem; /* Slightly smaller padding for time and sales */
+    text-align: left;
+    border-right: 1px solid #dee2e6;
+    white-space: nowrap;
+    overflow: hidden;
+    /* text-overflow: ellipsis; */
+}
+
+.time-sales-header-cell:last-child, .time-sales-cell:last-child {
+    border-right: none;
+}
+
+.time-sales-header-row {
+    font-weight: bold;
+    background-color: #f8f9fa;
+}
+
+.time-sales-row:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* If you need a fixed header, make sure the header container and the list container have matching widths. */
+/* You might also need to synchronize their horizontal scrolling if the columns exceed the view. */

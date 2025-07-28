@@ -1,7 +1,19 @@
+import MD5 from 'crypto-js/md5';
+import { io } from 'socket.io-client';
 
-// importScripts('/static/js/feeds/ws_config.js');
-// importScripts('/static/js/socket.io.min.js');
-window.importScripts('/js/socket.io.min.js'); // This should work if the file is in the public/js directory
+const generateToken = () => {
+    const offset = 6; // UTC+6
+    const date = new Date();
+    const utcDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000));
+    const localDate = new Date(utcDate.getTime() + (offset * 3600000));
+    const formattedDate = localDate.toISOString().split('T')[0]; // YYYY-MM-DD 
+    const tokenString = 'QUANT+' + formattedDate;
+    return MD5(tokenString).toString();
+};
+
+
+const token = generateToken();
+
 var inbound_fields = ["oid", "em", "os", "et", "ap", "or", "sym", "lq", "q", "dq", "ot", "rid", "cq", "tif", "ac", "td", "cc", "uid", "cid"];
 var broker_dealer_trade_field = ["did", "tv", "bv", "sv", "nv", "tvl", "bt", "st", "tt", "bo", "so", "to"];
 var outbond_order_chache_field = ["ex", "oid", "otm", "cid", "os", "osd", "cc", "oin", "tid", "lr", "q", "dq", "ot", "uid", "rid", "cq", "et", "ac", "td"];
@@ -77,8 +89,28 @@ var channel_and_fields = {
         active: true
     }
 };
+
 let node_socket_host = "https://ws-fix.quantbd.com/";
-var socket = io(node_socket_host);
+
+const socket = io(node_socket_host, {
+    autoConnect: false,
+    auth: {
+        token: token
+    }
+});
+
+
+// connectToSocket();
+
+function connectToSocket() {
+    if (socket.connected) {
+        console.log('Socket is already connected');
+        return;
+    }
+
+    socket.connect();
+}
+
 socket.on('connect', () => {
     console.log('Connected to Fix server ' + node_socket_host);
     subscribed_channel = []
@@ -162,7 +194,7 @@ onmessage = (msg) => {
     var msg_type = msg.data[0];
     if (msg_type === 'connect') {
         // subscribeToAllActiveChannel();
-        socket.connect();
+        connectToSocket();
         console.log('WS FIX Channels Subscribed');
     }
 

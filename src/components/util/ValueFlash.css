@@ -1,0 +1,32 @@
+/* ValueFlash.module.css */
+
+/* Define the keyframe animations for green and red flashes */
+@keyframes flash-green-animation {
+    0% { background-color: transparent; }
+    50% { background-color: #d4edda; } /* Light green (Bootstrap success color) */
+    100% { background-color: transparent; }
+}
+
+@keyframes flash-red-animation {
+    0% { background-color: transparent; }
+    50% { background-color: #f8d7da; } /* Light red (Bootstrap danger color) */
+    100% { background-color: transparent; }
+}
+
+/* Base class for the flash container */
+.valueFlashContainer {
+    /* Ensure the background color can be applied and seen */
+    display: inline-block; /* Or block, depending on desired layout */
+    padding: 0 4px; /* Optional: Add some padding for visual effect */
+    border-radius: 4px; /* Optional: Slightly rounded corners */
+    transition: background-color 0.1s ease-out; /* Smooth transition when animation finishes */
+}
+
+/* Apply the animations to the respective flash classes */
+.flashGreen {
+    animation: flash-green-animation var(--flash-duration, 0.5s) ease-out forwards;
+}
+
+.flashRed {
+    animation: flash-red-animation var(--flash-duration, 0.5s) ease-out forwards;
+}

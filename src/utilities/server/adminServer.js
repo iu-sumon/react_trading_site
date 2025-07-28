@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import errorHandler from "../errorHandler";
 
 const adminServer = axios.create({
-	baseURL: process.env.REACT_APP_SERVER_URL || 'https://omsapi.uftcl.com/',
+	baseURL: process.env.REACT_APP_SERVER_URL || 'https://omsapi.quantbd.com/',
 	accept: 'application/json',
 });
 

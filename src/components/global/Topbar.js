@@ -17,6 +17,8 @@ const Topbar = () => {
   const colorMode = useContext(ColorModeContext);
   const indexes = useSelector((state) => state.indexes.indexes);
   const cse_indexes = useSelector((state) => state.indexes.cse_indexes);
+  const dseMktHealth = useSelector((state) => state.mktHealth.dse_mkt_health);
+  const cseMktHealth = useSelector((state) => state.mktHealth.cse_mkt_health);
   const [currentIndex, setCurrentIndex] = useState('DSEX'); // Default index
   const [currentCseIndex, setCurrentCseIndex] = useState('CSCX'); // Default index
 
@@ -61,6 +63,23 @@ const Topbar = () => {
         </button>
       </div>
 
+
+      <div className="p-0 top-total-section">
+         <div > 
+          <div className="d-flex justify-content-between align-items-center mb-1">
+             <span className="total_trade_title">DSE Total Trade : </span> <span className="total_trade_val"
+              id="market_trade_dse"> { dseMktHealth ? dseMktHealth.total_trade : '' }</span> 
+              </div>
+               <div className="d-flex justify-content-between align-items-center mb-1"> 
+                <span className="total_volume_title">Total Volume : </span> <span className="total_volume_val" id="market_volume_dse"> { dseMktHealth ? dseMktHealth.total_volume : '' }</span> 
+                </div> 
+                <div className="d-flex justify-content-between align-items-center top-turnover-section-dse"> 
+                  <div  title="All Board(Public, SME and ATB)" > 
+                    <span className="total_turnover_title">Turnover : </span> <span><i className="fa fa-info turnover_info_btn" aria-hidden="true"></i></span>
+                     </div> <span className="total_turnover_val" id="market_turnover_dse"> { dseMktHealth ? dseMktHealth.total_turnover : '' }</span> </div> </div> <div >
+          </div>
+      </div>
+
       {/* index select option  */}
       <div style={{ 'display': 'flex', 'alignItems': 'center' }}>
         <div>
@@ -77,6 +96,9 @@ const Topbar = () => {
         ))}
       </select>
         </div>
+
+
+
 
 
     <div id="globalidx_dse" className="globalidx_container" style={{ marginLeft: '10px', padding: '5px' }}>
@@ -110,6 +132,22 @@ const Topbar = () => {
       </div>
 
       
+      <div className="p-0 top-total-section">
+         <div > 
+          <div className="d-flex justify-content-between align-items-center mb-1">
+             <span className="total_trade_title">CSE Total Trade : </span> <span className="total_trade_val"
+              id="market_trade_dse"> { cseMktHealth ? cseMktHealth.total_trade : '' }</span> 
+              </div>
+               <div className="d-flex justify-content-between align-items-center mb-1"> 
+                <span className="total_volume_title">Total Volume : </span> <span className="total_volume_val" id="market_volume_cse"> { cseMktHealth ? cseMktHealth.total_volume : '' }</span> 
+                </div> 
+                <div className="d-flex justify-content-between align-items-center top-turnover-section-cse"> 
+                  <div  title="All Board(Public, SME and ATB)" > 
+                    <span className="total_turnover_title">Turnover : </span> <span><i className="fa fa-info turnover_info_btn" aria-hidden="true"></i></span>
+                     </div> <span className="total_turnover_val" id="market_turnover_cse"> { cseMktHealth ? cseMktHealth.total_turnover : '' }</span> </div> </div> <div >
+          </div>
+      </div>
+
       <div style={{ 'display': 'flex', 'alignItems': 'center' }}>
         <div>
       <select

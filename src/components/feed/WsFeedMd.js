@@ -1,9 +1,10 @@
 import React, { useEffect , useRef } from 'react';
 import MyWorker from '../../workers/ws_worker_md';
 import { useSelector , useDispatch } from 'react-redux';
-import {  updateLtp , upodateBBO } from '../../slices/symbolsSlice'
+import {  updateLtp , upodateBBO , updateCp } from '../../slices/symbolsSlice'
 import { updateTimeSales } from '../../slices/timeAndSalesSlicer';
 import { updateIndex } from '../../slices/indexSlicer';
+import { updateDseMktHealth ,  updateCseMktHealth } from '../../slices/GlobalMarketSlicer';
 
 function WsFeedMd() {
     const workerRef = useRef(null);
@@ -37,6 +38,16 @@ function WsFeedMd() {
                 // Dispatch the upodateBBO action with the received data
                 // workerRef.current.postMessage({ type: 'upodateBBO', payload: msg });
                 dispatch(updateIndex(msg));
+            }
+            else if (channel === 'cp') {
+                dispatch(updateCp(msg.value));
+                console.log('CP Update:', msg.value);
+            }
+            else if (channel === 'dse_health') {
+              dispatch(updateDseMktHealth(JSON.parse(msg.value)));
+            }
+            else if (channel === 'cse_health') {
+              dispatch(updateCseMktHealth(JSON.parse(msg.value)));
             }
         };
     }, [dispatch]);

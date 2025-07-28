@@ -92,6 +92,14 @@ var channel_and_fields = {
     index_chart: {
         fields: ["index"],
         active: true
+    },
+    cse_health: {
+        fields: ["adv_dcl"],
+        active: true
+    },
+    dse_health: {
+        fields: ["index"],
+        active: true
     }
 };
 

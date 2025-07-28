@@ -6,6 +6,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.1",
+    "@lab49/react-value-flash": "^0.1.7",
     "@reduxjs/toolkit": "^2.2.5",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -23,6 +24,7 @@
     "react-router-dom": "^6.23.1",
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.5",
+    "react-virtualized": "^9.22.6",
     "react-window": "^1.8.11",
     "socket.io-client": "^4.8.1",
     "web-vitals": "^2.1.4"

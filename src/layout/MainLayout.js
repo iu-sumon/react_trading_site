@@ -7,6 +7,7 @@ import adminServer from '../utilities/server/adminServer';
 import {ALL_SYMBOL} from '../utilities/apiRequest/watchlist';
 import { setSymbols , updateLtp , upodateBBO } from '../slices/symbolsSlice';
 import { setIndex , setCseIndex } from '../slices/indexSlicer';
+import { setDseMktHealth, setCseMktHealth } from '../slices/GlobalMarketSlicer';
 import WsFeedMd from '../components/feed/WsFeedMd';
 import errorHandler from '../utilities/errorHandler';
 
@@ -28,6 +29,10 @@ const MainLayout = () => {
 
             getAllIndexes('DSE');
             getAllIndexes('CSE');
+            
+            // mkt health 
+            getMarketHealth('DSE');
+            getMarketHealth('CSE');
         }
 
     }, [user]);
@@ -92,6 +97,22 @@ const MainLayout = () => {
             .catch((error) => {
                 errorHandler(error);
     });
+    }
+
+    const getMarketHealth = (exchange) => {
+        adminServer.get('/market-data/trade-info?exchange=' + exchange)
+            .then((response) => {
+                const data = response.data.data;
+                console.log(data);
+                if (exchange === 'DSE') {
+                    dispatch(setDseMktHealth(data));
+                } else if (exchange === 'CSE') {
+                    dispatch(setCseMktHealth(data));
+                }
+            })
+            .catch((error) => {
+                errorHandler(error);
+        });
     }
 
 
