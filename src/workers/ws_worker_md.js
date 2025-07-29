@@ -18,7 +18,7 @@ const generateToken = () => {
 
 const token = generateToken();
 
-const node_socket_md_host = 'https://ws-md.quantbd.com'; // Replace with your actual host
+const node_socket_md_host = 'https://ws-md.uftcl.com'; // Replace with your actual host
 
 var channel_and_fields = {
     bbo: {

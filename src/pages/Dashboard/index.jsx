@@ -1,14 +1,29 @@
 import { useSelector } from "react-redux";
+import React, { useState, useEffect, useMemo } from 'react';
 import { FixedSizeList } from "react-window";
 // import { Flash } from '@lab49/react-value-flash';
 import ValueFlash from "../../components/util/ValueFlash";
 import TopStock from "../../components/common/TopStock";
 
 import './Dashboard.css'; // <--- THIS IS HOW YOU IMPORT IT
+import Portfolio from "../../components/portfolio/Portfolio";
+
 
 export default function Dashboard() {
     const symbols = useSelector((state) => state.symbols.symbols);
     const time_and_sales = useSelector((state) => state.timesales.time_and_sales);
+    const user = useSelector((state) => state.user);
+    // if current user type is client then get client code from user state
+    const [clientCode, setClientCode] = useState(user.userData.users_roles === 'client' ? user.userData.username : null);
+
+    // useEffect(() => {
+    //     console.log(user.userData);
+    //     if (user.userData.users_roles === 'client') {
+    //         setClientCode(user.userData.username);
+    //     } else {
+    //         setClientCode(null);
+    //     }
+    // }, [user]);
 
     const filteredSymbols = Object.values(symbols);
 
@@ -140,6 +155,14 @@ export default function Dashboard() {
                     <h6>Top Traded</h6>
                     <TopStock type={'traded'} rowCount={10} />
                 </div>
+            </div>
+
+            <div className="row">
+                <h6 className="title">Others</h6>
+                <div className="col-md-6">
+                    <Portfolio clientCode={clientCode} />
+                </div>
+
             </div>
         </div>
     );
