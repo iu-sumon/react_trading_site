@@ -11,6 +11,7 @@ import Portfolio from "../../components/portfolio/Portfolio";
 
 export default function Dashboard() {
     const symbols = useSelector((state) => state.symbols.symbols);
+    const bbos = useSelector((state) => state.symbols.bbo_symbols);
     const time_and_sales = useSelector((state) => state.timesales.time_and_sales);
     const user = useSelector((state) => state.user);
     // if current user type is client then get client code from user state
@@ -37,6 +38,11 @@ export default function Dashboard() {
         const item = filteredSymbols[index];
         if (!item) return null;
 
+        let bid = bbos[item.symbol]?.bid || 0;
+        let bidqty = bbos[item.symbol]?.bidqty || 0;
+        let ask = bbos[item.symbol]?.ask || 0;
+        let askqty = bbos[item.symbol]?.askqty || 0;
+
         return (
             // Apply the style from react-window to this div
             <div className="market-watch-row" style={style}>
@@ -50,10 +56,10 @@ export default function Dashboard() {
                     <span className={item.change_per >= 0 ? 'text-success' : 'text-danger'}>
                         {item.change_per}</span>
                 </div>
-                <div className="market-watch-cell bg-success">{item.bid}</div>
-                <div className="market-watch-cell bg-success">{item.bidqty}</div>
-                <div className="market-watch-cell bg-danger">{item.ask}</div>
-                <div className="market-watch-cell bg-danger">{item.askqty}</div>
+                <div className="market-watch-cell bg-success">{bid}</div>
+                <div className="market-watch-cell bg-success">{bidqty}</div>
+                <div className="market-watch-cell bg-danger">{ask}</div>
+                <div className="market-watch-cell bg-danger">{askqty}</div>
                 <div className="market-watch-cell">{item.volume}</div>
                 <div className="market-watch-cell">{item.value}</div>
                 <div className="market-watch-cell">{item.last_vol}</div>

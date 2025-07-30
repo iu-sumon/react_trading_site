@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     symbols: {},  // ✅ stored as object for fast keyed updates
+    bbo_symbols : {}, // ✅ stored as object for fast keyed updates
 };
 
 const symbolsSlicer = createSlice({
@@ -10,6 +11,11 @@ const symbolsSlicer = createSlice({
     reducers: {
         setSymbols(state, action) {
             state.symbols = action.payload; // assumes payload is an object
+        },
+
+        setGlobalBBO(state, action) {
+            const bboData = action.payload; // expects payload to be an object with symbol keys
+            state.bbo_symbols = bboData; // assumes payload is an object
         },
         updateLtp(state, action) {
             const { xc, s, g, p, eq ,  ch, chp, tvl , tq , o , h , l , cu , cd , vwap , dh , dl  } = action.payload;
@@ -40,12 +46,12 @@ const symbolsSlicer = createSlice({
         {
             const { s , g,  bp,bq , ap , aq  } = action.payload;
             const symbolKey = s + '.' + g; // Construct the unique key for lookup
-            if (state.symbols[symbolKey]) {
+            if (state.bbo_symbols[symbolKey]) {
                 // Immer handles these direct mutations safely by creating a new state object.
-                state.symbols[symbolKey].bid = bp;
-                state.symbols[symbolKey].bidqty = bq;
-                state.symbols[symbolKey].ask = ap;
-                state.symbols[symbolKey].askqty = aq;
+                state.bbo_symbols[symbolKey].bid = bp;
+                state.bbo_symbols[symbolKey].bidqty = bq;
+                state.bbo_symbols[symbolKey].ask = ap;
+                state.bbo_symbols[symbolKey].askqty = aq;
             }
           
         },
@@ -74,5 +80,5 @@ const symbolsSlicer = createSlice({
     },
 });
 
-export const { setSymbols, clearSymbols, updateLtp , upodateBBO , updateCp } = symbolsSlicer.actions;
+export const { setSymbols, clearSymbols, updateLtp , upodateBBO , updateCp , setGlobalBBO} = symbolsSlicer.actions;
 export default symbolsSlicer.reducer;

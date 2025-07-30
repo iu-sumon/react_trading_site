@@ -5,7 +5,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import adminServer from '../utilities/server/adminServer';
 import { ALL_SYMBOL } from '../utilities/apiRequest/watchlist';
-import { setSymbols } from '../slices/symbolsSlice';
+import { setSymbols , setGlobalBBO } from '../slices/symbolsSlice';
 import { setIndex, setCseIndex } from '../slices/indexSlicer';
 import { setDseMktHealth, setCseMktHealth } from '../slices/GlobalMarketSlicer';
 import WsFeedMd from '../components/feed/WsFeedMd';
@@ -46,13 +46,10 @@ const MainLayout = () => {
         adminServer.get(ALL_SYMBOL + '?exchange=DSE')
             .then((response) => {
                 let new_array = {};
+                let bbo_array = {};
                 response.data.data.forEach((item) => {
                     new_array[item.symbol] = {
                         ...item,
-                        'bid': null,
-                        'ask': null,
-                        'bidqty': null,
-                        'askqty': null,
                         'ltp': 0,
                         'change': null,
                         'change_per': null,
@@ -68,9 +65,21 @@ const MainLayout = () => {
                         'cu': null,
                         'cd': null,
                     }
+
+
+                    bbo_array[item.symbol] = {
+                        ...item,
+                        'bid': null,
+                        'ask': null,
+                        'bidqty': null,
+                        'askqty': null,
+                    }
                 });
 
+
+
                 dispatch(setSymbols(new_array));
+                dispatch(setGlobalBBO(bbo_array));
 
 
             })
